@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réra Lineage Product Catalog</title>
+
+    <style>
+        :root {
+            --primary: #111827;
+            --secondary: #374151;
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        #portfolioBtn {
+            background: #059669;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Segoe UI, Arial, sans-serif;
+        }
+
+        /* ADMIN BUTTON */
+
+
+
+        /* HIDE ADMIN PANEL BY DEFAULT */
+
+        .sidebar {
+            display: none;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        body {
+            background: var(--bg);
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+
+        .sidebar h2 {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: .9;
+        }
+
+        .customer-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 90vh;
+        }
+
+        .filters-panel {
+            background: white;
+            padding: 25px;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .filters-panel h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .filter-group {
+            margin-bottom: 25px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+
+        .products-panel {
+            padding: 25px;
+        }
+
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .products-header input {
+            width: 350px;
+        }
+
+        .search {
+            width: 300px;
+            padding: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: none;
+            transition: .3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .images {
+            display: block;
+            background: #f7f7f7;
+        }
+
+
+        .image-box {
+            height: 250px;
+            background: #f7f7f7;
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .placeholder {
+            color: #9ca3af;
+            text-align: center;
+        }
+
+        .content {
+            padding: 15px;
+            text-align: left;
+        }
+
+        .content h3 {
+            margin-bottom: 8px;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            background: #eef2ff;
+            color: #3730a3;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .row {
+            margin-bottom: 6px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .75);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .modal-images {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .modal-images img {
+            width: 100%;
+            height: 600px;
+            object-fit: contain;
+        }
+
+        .modal-details {
+            padding: 20px;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tabs button {
+            width: auto;
+            padding: 12px 30px;
+        }
+
+        #customerView {
+            display: block;
+        }
+
+        #adminView {
+            display: none;
+            padding: 20px;
+        }
+
+        .search {
+            width: 100%;
+        }
+
+        .hero {
+            height: 350px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #f9a8d4, #fb7185);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .shop-btn {
+            width: auto;
+            padding: 12px 30px;
+            background: white;
+            color: black;
+        }
+
+        .categories {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .cat-btn {
+            width: auto;
+            padding: 10px 20px;
+            background: #f3f4f6;
+            color: #111;
+        }
+
+        .cat-btn.active {
+            background: black;
+            color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin: 40px 0;
+            font-size: 22px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: "";
+            display: inline-block;
+            width: 50px;
+            height: 1px;
+            background: #ccc;
+            vertical-align: middle;
+            margin: 0 15px;
+        }
+
+        .footer {
+            margin-top: 80px;
+            padding: 50px 20px;
+            background: #fff;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .footer-btn {
+            width: auto;
+            padding: 12px 22px;
+            background: #f3f4f6;
+            color: #111;
+            border-radius: 30px;
+            font-size: 14px;
+        }
+
+        .footer-btn:hover {
+            background: #111;
+            color: #fff;
+        }
+
+        .footer-copy {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .75);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 350px;
+        }
+
+        .login-error {
+            color: red;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .login-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .login-cancel {
+            background: #6b7280;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        RÉRA LINEAGE PRODUCT CATALOG
+    </div>
+
+    <div class="tabs">
+
+        <button id="customerTab" onclick="showCustomer()">
+            CUSTOMER
+        </button>
+
+        <button id="adminTab" onclick="showAdmin()">
+            ADMIN
+        </button>
+
+    </div>
+
+    <div id="customerView">
+
+        <div class="catalog">
+
+            <div class="hero">
+
+                <div class="hero-content">
+                    <h1>RÉRA LINEAGE</h1>
+                    <p>Premium Custom Apparel</p>
+                    <button class="shop-btn">SHOP NOW</button>
+                </div>
+
+            </div>
+
+            <div class="categories">
+
+                <button class="cat-btn active">All</button>
+                <button class="cat-btn">T-Shirts</button>
+                <button class="cat-btn">Oversized</button>
+                <button class="cat-btn">Polo</button>
+                <button class="cat-btn">Acid Wash</button>
+
+            </div>
+
+            <div class="catalog-header">
+
+                <input class="search" placeholder="Search products..." onkeyup="filterProducts(this.value)">
+
+            </div>
+
+            <h2 class="section-title">
+                Best Selling
+            </h2>
+
+            <div id="productGrid" class="grid"></div>
+
+            <footer class="footer">
+
+                <div class="footer-links">
+
+                    <button class="footer-btn">About Us</button>
+                    <button class="footer-btn">FAQ</button>
+                    <button class="footer-btn">Terms & Conditions</button>
+                    <button class="footer-btn">Shipping Policy</button>
+                    <button class="footer-btn">Returns & Refunds</button>
+                    <button class="footer-btn">Privacy Policy</button>
+                    <button class="footer-btn">Size Guide</button>
+                    <button class="footer-btn">Bulk Orders</button>
+                    <button class="footer-btn">Contact Us</button>
+
+                </div>
+
+                <div class="footer-copy">
+                    © 2026 RÉRA LINEAGE • Premium Custom Apparel
+                </div>
+
+            </footer>
+
+        </div>
+
+    </div>
+
+    <div id="adminView" style="display:none;">
+
+        <div class="sidebar" style="display:block;">
+
+            <button id="logoutBtn" type="button">
+                Logout Admin
+            </button>
+
+            <h2>Add Product</h2>
+
+            <label>Product Name</label>
+            <input id="name">
+
+            <label>Description</label>
+            <textarea id="description"></textarea>
+
+            <label>Cost Price</label>
+            <input type="number" id="cost">
+
+            <label>Selling Price</label>
+            <input type="number" id="sell">
+
+            <label>GSM</label>
+            <input id="gsm">
+
+            <label>Product Type</label>
+
+            <select id="type">
+                <option>180 GSM Cotton T-Shirt</option>
+                <option>200 GSM Oversized</option>
+                <option>240 GSM Acid Wash</option>
+                <option>Polo</option>
+                <option>Sweatshirt</option>
+                <option>Kids Wear</option>
+            </select>
+
+            <label>Fabric</label>
+            <input id="fabric">
+
+            <label>Colours</label>
+            <input id="colors">
+
+            <label>Design Options</label>
+            <input id="designs">
+
+            <label>Front Image</label>
+            <input type="file" id="front">
+
+            <label>Back Image</label>
+            <input type="file" id="back">
+
+            <button onclick="saveProduct()">
+                Add Product
+            </button>
+
+        </div>
+
+    </div>
+
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+
+            <div class="modal-details">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2 id="modalTitle"></h2>
+                <p id="modalDescription"></p>
+            </div>
+
+            <div class="modal-images">
+                <img id="modalFront">
+                <img id="modalBack">
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+
+
+        let products =
+            JSON.parse(localStorage.getItem("rera_catalog")) || [];
+
+        function fileToBase64(file) {
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = e => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function saveProduct() {
+
+            const front =
+                document.getElementById("front").files[0];
+
+            const back =
+                document.getElementById("back").files[0];
+
+            const product = {
+                id: Date.now(),
+                name: name.value,
+                description: description.value,
+                cost: cost.value,
+                sell: sell.value,
+                gsm: gsm.value,
+                type: type.value,
+                fabric: fabric.value,
+                colors: colors.value,
+                designs: designs.value,
+                front: front ? await fileToBase64(front) : "",
+                back: back ? await fileToBase64(back) : ""
+            };
+
+            products.push(product);
+
+            localStorage.setItem(
+                "rera_catalog",
+                JSON.stringify(products)
+            );
+            renderProducts();
+
+            document.querySelectorAll(
+                "input, textarea"
+            ).forEach(x => {
+                if (x.type !== "file") x.value = "";
+            });
+        }
+
+        function renderProducts(list = products) {
+
+            const grid =
+                document.getElementById("productGrid");
+
+            grid.innerHTML = "";
+
+            list.forEach(product => {
+
+                grid.innerHTML += `
+        <div class="card">
+
+            <div class="images">
+
+                <div class="image-box">
+                ${product.front
+                        ? `<img src="${product.front}">`
+                        : `<div class="placeholder">Front Image</div>`
+                    }
+                </div>
+
+                <div class="image-box">
+                ${product.back
+                        ? `<img src="${product.back}">`
+                        : `<div class="placeholder">Back Image</div>`
+                    }
+                </div>
+
+            </div>
+
+            <div class="content">
+
+    <h3>${product.name}</h3>
+
+    <div class="meta">
+        <span class="tag">${product.type}</span>
+    </div>
+
+    <div style="
+        font-size:20px;
+        font-weight:700;
+        margin-top:10px;">
+        ₹${product.sell}
+    </div>
+
+</div>
+
+                <div class="actions" style="
+display:${sessionStorage.getItem('rera_admin') === 'true'
+                        ? 'flex' : 'none'}">
+
+                    <button
+                    onclick="viewProduct(${product.id})">
+                    Open Portfolio
+                    </button>
+
+                    <button
+                    class="delete-btn"
+                    onclick="deleteProduct(${product.id})">
+                    Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+        `;
+            });
+        }
+
+        function viewProduct(id) {
+
+            const product =
+                products.find(x => x.id === id);
+
+            modal.style.display = "flex";
+
+            modalTitle.innerText =
+                product.name;
+
+            modalDescription.innerText =
+                product.description;
+
+            modalFront.src =
+                product.front || "";
+
+            modalBack.src =
+                product.back || "";
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        function deleteProduct(id) {
+
+            if (!confirm("Delete Product?"))
+                return;
+
+            products =
+                products.filter(
+                    p => p.id !== id
+                );
+
+            localStorage.setItem(
+                "rera_catalog",
+                JSON.stringify(products)
+            );
+
+            renderProducts();
+        }
+
+        function filterProducts(text) {
+
+            text = text.toLowerCase();
+
+            const filtered =
+                products.filter(p =>
+                    p.name.toLowerCase().includes(text) ||
+                    p.type.toLowerCase().includes(text) ||
+                    p.fabric.toLowerCase().includes(text)
+                );
+
+            renderProducts(filtered);
+        }
+
+
+        renderProducts();
+        document.getElementById("logoutBtn").addEventListener("click", function () {
+
+            sessionStorage.removeItem("rera_admin");
+
+            location.reload();
+
+        });
+
+        function showCustomer() {
+
+            document.getElementById("customerView")
+                .style.display = "block";
+
+            document.getElementById("adminView")
+                .style.display = "none";
+        }
+
+        function showAdmin() {
+
+            if (
+                sessionStorage.getItem("rera_admin")
+                !== "true"
+            ) {
+
+
+
+                sessionStorage.setItem(
+                    "rera_admin",
+                    "true"
+                );
+            }
+
+            document.getElementById("customerView")
+                .style.display = "none";
+
+            document.getElementById("adminView")
+                .style.display = "block";
+        }
+        window.onload = function () {
+            showCustomer();
+            renderProducts();
+        };
+        const ADMIN_PASSWORD = "analytics9";
+
+        function requestAdminAccess() {
+
+            document.getElementById("loginOverlay")
+                .style.display = "flex";
+        }
+
+        function cancelAdminLogin() {
+
+            document.getElementById("loginOverlay")
+                .style.display = "none";
+        }
+
+        function checkAdminPassword() {
+
+            const entered =
+                document.getElementById("adminPassword")
+                    .value;
+
+            if (entered === ADMIN_PASSWORD) {
+
+                sessionStorage.setItem(
+                    "rera_admin",
+                    "true"
+                );
+
+                document.getElementById("loginOverlay")
+                    .style.display = "none";
+
+                showAdmin();
+
+            } else {
+
+                document.getElementById("loginError")
+                    .innerText =
+                    "Incorrect Password";
+            }
+        }
+    </script>
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-box">
+            <h2>Admin Login</h2>
+
+            <label>Password</label>
+
+            <input type="password" id="adminPassword" onkeydown="if(event.key==='Enter') checkAdminPassword()">
+
+            <div id="loginError" class="login-error"></div>
+
+            <div class="login-actions">
+
+                <button class="login-cancel" onclick="cancelAdminLogin()">
+                    Cancel
+                </button>
+
+                <button onclick="checkAdminPassword()">
+                    Login
+                </button>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
